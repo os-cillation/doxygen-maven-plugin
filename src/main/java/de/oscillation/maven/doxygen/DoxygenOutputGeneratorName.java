@@ -1,4 +1,4 @@
-package de.oscillation.maven;
+package de.oscillation.maven.doxygen;
 
 /*
  * Copyright 2014 Sebastian Neuser
