@@ -3,13 +3,51 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
     <groupId>de.oscillation.maven</groupId>
     <artifactId>doxygen-maven-plugin</artifactId>
     <version>0.1.0-SNAPSHOT</version>
+
     <packaging>maven-plugin</packaging>
 
-    <name>doxygen-maven-plugin Maven Plugin</name>
+    <name>Doxygen Plugin for Maven</name>
+    <description>A Maven plugin that simple calls doxygen</description>
     <url>https://github.com/os-cillation/doxygen-maven-plugin</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>os-cillation GmbH</name>
+        <url>http://www.os-cillation.de</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>sn</id>
+            <name>Sebastian Neuser</name>
+            <email>sn@os-cillation.de</email>
+            <roles>
+                <role>owner</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>git@github.com:os-cillation/doxygen-maven-plugin.git</url>
+        <connection>scm:git:https://github.com/os-cillation/doxygen-maven-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/os-cillation/doxygen-maven-plugin.git</developerConnection>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
