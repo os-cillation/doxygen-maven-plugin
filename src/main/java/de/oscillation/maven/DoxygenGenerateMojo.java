@@ -36,8 +36,8 @@ public class DoxygenGenerateMojo extends AbstractDoxygenMojo {
         // Set up command line
         Commandline cl = new Commandline();
         cl.setWorkingDirectory(getWorkingDirectory());
-        cl.setExecutable(getExecutable());
-        cl.createArg().setValue(getDoxyfile());
+        cl.setExecutable(getExecutablePath());
+        cl.createArg().setValue(getDoxyfilePath());
 
         // Set up stream consumers
         StringWriter stringWriter = new StringWriter();

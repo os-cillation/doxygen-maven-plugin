@@ -28,14 +28,14 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo {
     /**
      * Path to the Doxyfile relative to the working directory.
      */
-    @Parameter( property="doxygen.doxyfile", defaultValue="Doxyfile", required=true )
-    private String doxyfile;
+    @Parameter( property="doxygen.doxyfilePath", defaultValue="Doxyfile", required=true )
+    private String doxyfilePath;
 
     /**
      * Path of the Doxygen executable.
      */
-    @Parameter( property="doxygen.executable", defaultValue="doxygen", required=true )
-    private String executable;
+    @Parameter( property="doxygen.executablePath", defaultValue="doxygen", required=true )
+    private String executablePath;
 
     /**
      * Working directory for Doxygen.
@@ -44,17 +44,17 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo {
     private File workingDirectory;
 
     /**
-     * @return the doxyfile
+     * @return the doxyfile path
      */
-    public String getDoxyfile() {
-        return doxyfile;
+    public String getDoxyfilePath() {
+        return doxyfilePath;
     }
 
     /**
-     * @return the executable
+     * @return the executable path
      */
-    public String getExecutable() {
-        return executable;
+    public String getExecutablePath() {
+        return executablePath;
     }
 
     /**
