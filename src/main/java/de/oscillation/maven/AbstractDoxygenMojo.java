@@ -24,7 +24,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * Abstract Mojo for Doxygen Mojos.
  */
-public abstract class AbstractDoxygenMojo extends AbstractMojo {
+public abstract class AbstractDoxygenMojo extends AbstractMojo
+{
     /**
      * Path to the Doxyfile relative to the working directory.
      */

@@ -31,7 +31,8 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
  * Goal which runs Doxygen in the project directory.
  */
 @Mojo( name = "generate", defaultPhase = LifecyclePhase.PREPARE_PACKAGE )
-public class DoxygenGenerateMojo extends AbstractDoxygenMojo {
+public class DoxygenGenerateMojo extends AbstractDoxygenMojo
+{
     public void execute() throws MojoExecutionException {
         // Set up command line
         Commandline cl = new Commandline();
