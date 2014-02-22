@@ -56,12 +56,12 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
     @Parameter( property="doxygen.workingDirectory", defaultValue="${basedir}", required=true )
     private File workingDirectory;
 
-    protected void checkExecutable() {
-        // Set up stream consumers
-        StringWriter stringWriter = new StringWriter();
-        StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
-        StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
+    // Stream consumers
+    protected StringWriter stringWriter = new StringWriter();
+    protected StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
+    protected StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
 
+    protected void checkExecutable() {
         // Check the executable
         try {
             Commandline cl = new Commandline();
@@ -82,11 +82,6 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
     }
 
     protected void ensureDoxyfile() {
-        // Set up stream consumers
-        StringWriter stringWriter = new StringWriter();
-        StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
-        StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
-
         // Generate Doxyfile if it is missing and the autogen flag is set
         File doxyfile = new File(getWorkingDirectory() + File.separator + getDoxyfilePath());
         if (!doxyfile.exists()) {

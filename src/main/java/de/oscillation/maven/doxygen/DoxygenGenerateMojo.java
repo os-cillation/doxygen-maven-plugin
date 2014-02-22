@@ -16,16 +16,12 @@ package de.oscillation.maven.doxygen;
  * limitations under the License.
  */
 
-import java.io.StringWriter;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.StreamConsumer;
-import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
  * Goal which runs Doxygen in the project directory.
@@ -43,11 +39,6 @@ public class DoxygenGenerateMojo extends AbstractDoxygenMojo
         cl.setWorkingDirectory(getWorkingDirectory());
         cl.setExecutable(getExecutablePath());
         cl.createArg().setValue(getDoxyfilePath());
-
-        // Set up stream consumers
-        StringWriter stringWriter = new StringWriter();
-        StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
-        StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
 
         try {
             CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);

@@ -18,7 +18,6 @@ package de.oscillation.maven.doxygen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,8 +28,6 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.StreamConsumer;
-import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
  * Goal which cleans the Doxygen output directory.
@@ -105,14 +102,10 @@ public class DoxygenCleanMojo extends AbstractDoxygenMojo
             }
         }
 
-        // Set up stream consumers
-        StringWriter stringWriter = new StringWriter();
-        StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
-        StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
-
         try {
             CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
 
+            // Log debug output
             for (String line : stringWriter.toString().split("\n")) {
                 getLog().debug(line);
             }
