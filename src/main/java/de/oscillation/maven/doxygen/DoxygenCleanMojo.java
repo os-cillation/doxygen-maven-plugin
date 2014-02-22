@@ -18,7 +18,6 @@ package de.oscillation.maven.doxygen;
 
 import java.io.File;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.cli.CommandLineException;
@@ -32,12 +31,10 @@ import org.codehaus.plexus.util.cli.Commandline;
 public class DoxygenCleanMojo extends AbstractDoxygenMojo
 {
     /* (non-Javadoc)
-     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     * @see de.oscillation.maven.doxygen.AbstractDoxygenMojo#execute()
      */
-    public void execute() throws MojoExecutionException {
-        // Initialize Mojo
-        initialize();
-
+    @Override
+    public void performTasks() {
         // Set up command line
         Commandline cl = new Commandline();
         cl.setWorkingDirectory(getWorkingDirectory());

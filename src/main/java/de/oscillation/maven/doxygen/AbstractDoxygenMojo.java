@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
@@ -86,16 +87,6 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
      * List of all available Doxygen output generators.
      */
     protected List<DoxygenOutputGenerator> outputGenerators = new ArrayList<DoxygenOutputGenerator>();
-
-    /**
-     * Checks the Doxygen executable, generates the Doxyfile if necessary and
-     * parses relevant parameters from it.
-     */
-    protected void initialize() {
-        checkExecutable();
-        ensureDoxyfile();
-        readOutputParametersFromDoxyfile();
-    }
 
     /**
      * Checks if calling the Doxygen executable works.
@@ -207,6 +198,25 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
         catch (FileNotFoundException e) {
             getLog().error("Doxyfile does not exist: " + e.getMessage());
         }
+    }
+
+    /**
+     * All goal specific tasks are performed in this function, which is called by {@link #execute()}.
+     */
+    protected abstract void performTasks();
+
+    /**
+     * Checks the Doxygen executable, generates the Doxyfile if necessary and
+     * parses relevant parameters from it.
+     * Calls {@link #performTasks()} after the initialization.
+     *
+     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     */
+    public void execute() throws MojoExecutionException {
+        checkExecutable();
+        ensureDoxyfile();
+        readOutputParametersFromDoxyfile();
+        performTasks();
     }
 
     /**
