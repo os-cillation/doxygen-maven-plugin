@@ -35,9 +35,8 @@ public class DoxygenCleanMojo extends AbstractDoxygenMojo
      * @see org.apache.maven.plugin.AbstractMojo#execute()
      */
     public void execute() throws MojoExecutionException {
-        // Perform checks
-        ensureDoxyfile();
-        readOutputParametersFromDoxyfile();
+        // Initialize Mojo
+        initialize();
 
         // Set up command line
         Commandline cl = new Commandline();
@@ -52,10 +51,10 @@ public class DoxygenCleanMojo extends AbstractDoxygenMojo
             }
         }
 
+        // Execute command line and log debug output
         try {
             CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
 
-            // Log debug output
             for (String line : stringWriter.toString().split("\n")) {
                 getLog().debug(line);
             }

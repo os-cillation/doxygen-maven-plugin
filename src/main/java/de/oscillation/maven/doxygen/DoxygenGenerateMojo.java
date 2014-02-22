@@ -33,9 +33,8 @@ public class DoxygenGenerateMojo extends AbstractDoxygenMojo
      * @see org.apache.maven.plugin.AbstractMojo#execute()
      */
     public void execute() throws MojoExecutionException {
-        // Perform checks
-        checkExecutable();
-        ensureDoxyfile();
+        // Initialize Mojo
+        initialize();
 
         // Set up command line
         Commandline cl = new Commandline();
@@ -43,10 +42,10 @@ public class DoxygenGenerateMojo extends AbstractDoxygenMojo
         cl.setExecutable(getExecutablePath());
         cl.createArg().setValue(getDoxyfilePath());
 
+        // Execute command line and log debug output
         try {
             CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
 
-            // Log debug output
             for (String line : stringWriter.toString().split("\n")) {
                 getLog().debug(line);
             }

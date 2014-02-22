@@ -88,6 +88,16 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
     protected List<DoxygenOutputGenerator> outputGenerators = new ArrayList<DoxygenOutputGenerator>();
 
     /**
+     * Checks the Doxygen executable, generates the Doxyfile if necessary and
+     * parses relevant parameters from it.
+     */
+    protected void initialize() {
+        checkExecutable();
+        ensureDoxyfile();
+        readOutputParametersFromDoxyfile();
+    }
+
+    /**
      * Checks if calling the Doxygen executable works.
      */
     protected void checkExecutable() {
