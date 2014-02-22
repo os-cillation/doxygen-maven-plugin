@@ -17,7 +17,11 @@ package de.oscillation.maven.doxygen;
  */
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -32,6 +36,8 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
  */
 public abstract class AbstractDoxygenMojo extends AbstractMojo
 {
+    private static final String DOXYGEN_OUTPUT_DIRECTORY_KEY = "OUTPUT_DIRECTORY";
+
     /**
      * Path to the Doxyfile relative to the working directory.
      */
@@ -70,6 +76,16 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
      * Stream consumer for <code>stderr</code>.
      */
     protected StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
+
+    /**
+     * The base path for Doxygen output files.
+     */
+    protected String outputBasePath = ".";
+
+    /**
+     * List of all available Doxygen output generators.
+     */
+    protected List<DoxygenOutputGenerator> outputGenerators = new ArrayList<DoxygenOutputGenerator>();
 
     /**
      * Checks if calling the Doxygen executable works.
@@ -127,6 +143,59 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
                 getLog().error("configuration file " + getDoxyfilePath() + " not found!");
                 return;
             }
+        }
+    }
+
+    /**
+     * Parses the Doxygen configuration file and extracts information on output generators.
+     * The information is stored in {@link #outputBasePath} and {@link #outputGenerators}.
+     */
+    protected void readOutputParametersFromDoxyfile() {
+        // Prepare a list of all available output generators
+        for (DoxygenOutputGeneratorName name : DoxygenOutputGeneratorName.values()) {
+            outputGenerators.add(new DoxygenOutputGenerator(name));
+        }
+
+        // Read output generator information from the Doxyfile
+        try {
+            File doxyfile = new File(getWorkingDirectory() + File.separator + getDoxyfilePath());
+            Scanner input = new Scanner(doxyfile);
+            while (input.hasNext()) {
+                String line = input.nextLine();
+
+                // Extract output base directory
+                if (line.indexOf(DOXYGEN_OUTPUT_DIRECTORY_KEY) > -1) {
+                    String[] tokens = line.split("=");
+                    if (tokens.length >= 2) {
+                        outputBasePath = tokens[1].trim();
+                    }
+                    continue;
+                }
+
+                for (DoxygenOutputGenerator generator : outputGenerators) {
+                    // Extract activation flag
+                    if (line.indexOf(generator.getActivationConfigKey()) > -1) {
+                        String[] tokens = line.split("=");
+                        if (tokens.length >= 2
+                        &&  tokens[1].indexOf(DoxyfileBooleanValue.getTrueString()) > -1) {
+                            generator.setActive(true);
+                        }
+                        continue;
+                    }
+
+                    // Extract output path
+                    if (line.indexOf(generator.getOutputPathConfigKey()) > -1) {
+                        String[] tokens = line.split("=");
+                        if (tokens.length >= 2) {
+                            generator.setOutputPath(tokens[1].trim());
+                        }
+                        continue;
+                    }
+                }
+            }
+        }
+        catch (FileNotFoundException e) {
+            getLog().error("Doxyfile does not exist: " + e.getMessage());
         }
     }
 
