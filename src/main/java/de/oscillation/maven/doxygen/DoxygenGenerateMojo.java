@@ -42,6 +42,13 @@ public class DoxygenGenerateMojo extends AbstractDoxygenMojo
         cl.setExecutable(getExecutablePath());
         cl.createArg().setValue(getDoxyfilePath());
 
+        // Log which output generators are active
+        for (DoxygenOutputGenerator generator : outputGenerators) {
+            if (generator.isActive()) {
+                getLog().info("Generating " + generator.getName() + " output");
+            }
+        }
+
         // Execute command line and log debug output
         try {
             CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
