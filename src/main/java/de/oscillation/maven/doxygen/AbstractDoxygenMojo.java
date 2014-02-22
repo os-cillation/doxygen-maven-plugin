@@ -17,9 +17,15 @@ package de.oscillation.maven.doxygen;
  */
 
 import java.io.File;
+import java.io.StringWriter;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.util.cli.CommandLineException;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.cli.StreamConsumer;
+import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
  * Abstract Mojo for Doxygen Mojos.
@@ -43,6 +49,40 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
      */
     @Parameter( property="doxygen.workingDirectory", defaultValue="${basedir}", required=true )
     private File workingDirectory;
+
+    protected void checkExecutable() {
+        // Set up stream consumers
+        StringWriter stringWriter = new StringWriter();
+        StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
+        StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
+
+        // Check the executable
+        try {
+            Commandline cl = new Commandline();
+            cl.setWorkingDirectory(getWorkingDirectory());
+            cl.setExecutable(getExecutablePath());
+            cl.createArg().setValue("--version");
+
+            int exitCode = CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
+            if (exitCode != 0) {
+                getLog().error(getExecutablePath() + ": command not found");
+                return;
+            }
+        }
+        catch (CommandLineException e) {
+            getLog().error("CommandLineException: " + e.getMessage());
+            return;
+        }
+    }
+
+    protected void ensureDoxyfile() {
+        // Abort if the configuration file is not found
+        File doxyfile = new File(getWorkingDirectory() + File.separator + getDoxyfilePath());
+        if (!doxyfile.exists()) {
+            getLog().error("configuration file " + getDoxyfilePath() + " not found!");
+            return;
+        }
+    }
 
     /**
      * @return the doxyfile path

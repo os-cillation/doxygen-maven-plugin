@@ -30,10 +30,14 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 /**
  * Goal which runs Doxygen in the project directory.
  */
-@Mojo( name = "generate", defaultPhase = LifecyclePhase.PREPARE_PACKAGE )
+@Mojo(name = "generate", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)
 public class DoxygenGenerateMojo extends AbstractDoxygenMojo
 {
     public void execute() throws MojoExecutionException {
+        // Perform checks
+        checkExecutable();
+        ensureDoxyfile();
+
         // Set up command line
         Commandline cl = new Commandline();
         cl.setWorkingDirectory(getWorkingDirectory());
@@ -48,6 +52,7 @@ public class DoxygenGenerateMojo extends AbstractDoxygenMojo
         try {
             CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
 
+            // Log debug output
             for (String line : stringWriter.toString().split("\n")) {
                 getLog().debug(line);
             }
