@@ -32,12 +32,15 @@ import org.codehaus.plexus.util.cli.Commandline;
 /**
  * Goal which cleans the Doxygen output directory.
  */
-@Mojo( name = "clean", defaultPhase = LifecyclePhase.CLEAN )
+@Mojo(name = "clean", defaultPhase = LifecyclePhase.CLEAN)
 public class DoxygenCleanMojo extends AbstractDoxygenMojo
 {
     private static final String DOXYGEN_OUTPUT_DIRECTORY_KEY = "OUTPUT_DIRECTORY";
 
     public void execute() throws MojoExecutionException {
+        // Perform checks
+        ensureDoxyfile();
+
         // Initialize the output base directory path with the working directory path
         String outputBasePath = getWorkingDirectory().getPath();
 
