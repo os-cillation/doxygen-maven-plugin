@@ -56,13 +56,25 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
     @Parameter( property="doxygen.workingDirectory", defaultValue="${basedir}", required=true )
     private File workingDirectory;
 
-    // Stream consumers
+    /**
+     * String writer for console output.
+     */
     protected StringWriter stringWriter = new StringWriter();
+
+    /**
+     * Stream consumer for <code>stdout</code>.
+     */
     protected StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
+
+    /**
+     * Stream consumer for <code>stderr</code>.
+     */
     protected StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
 
+    /**
+     * Checks if calling the Doxygen executable works.
+     */
     protected void checkExecutable() {
-        // Check the executable
         try {
             Commandline cl = new Commandline();
             cl.setWorkingDirectory(getWorkingDirectory());
@@ -81,10 +93,16 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
         }
     }
 
+    /**
+     * Checks if the Doxygen configuration file exists.
+     * If it does not exist and the <code>autogen</code> flag was set in <code>pom.xml</code>,
+     * the file is automatically generated.
+     * Otherwise the execution is aborted with an error message.
+     */
     protected void ensureDoxyfile() {
-        // Generate Doxyfile if it is missing and the autogen flag is set
         File doxyfile = new File(getWorkingDirectory() + File.separator + getDoxyfilePath());
         if (!doxyfile.exists()) {
+            // Generate Doxyfile if the autogen flag is set
             if (this.shouldAutogen()) {
                 Commandline cl = new Commandline();
                 cl.setWorkingDirectory(getWorkingDirectory());
