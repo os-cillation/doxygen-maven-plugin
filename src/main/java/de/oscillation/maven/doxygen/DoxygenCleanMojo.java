@@ -25,7 +25,7 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Goal which cleans the Doxygen output directory.
+ * Clean Doxygen output directories defined in the Doxyfile.
  */
 @Mojo(name = "clean", defaultPhase = LifecyclePhase.CLEAN)
 public class DoxygenCleanMojo extends AbstractDoxygenMojo
