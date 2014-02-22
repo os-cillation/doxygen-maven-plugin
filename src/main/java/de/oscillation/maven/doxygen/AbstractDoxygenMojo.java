@@ -39,6 +39,12 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
     private String doxyfilePath;
 
     /**
+     * Flag that triggers automatic generation of Doxygen config if it is missing.
+     */
+    @Parameter( property="doxygen.autogen", defaultValue="false", required=true )
+    private boolean autogen;
+
+    /**
      * Path of the Doxygen executable.
      */
     @Parameter( property="doxygen.executablePath", defaultValue="doxygen", required=true )
@@ -76,12 +82,46 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
     }
 
     protected void ensureDoxyfile() {
-        // Abort if the configuration file is not found
+        // Set up stream consumers
+        StringWriter stringWriter = new StringWriter();
+        StreamConsumer systemOut = new WriterStreamConsumer(stringWriter);
+        StreamConsumer systemErr = new WriterStreamConsumer(stringWriter);
+
+        // Generate Doxyfile if it is missing and the autogen flag is set
         File doxyfile = new File(getWorkingDirectory() + File.separator + getDoxyfilePath());
         if (!doxyfile.exists()) {
-            getLog().error("configuration file " + getDoxyfilePath() + " not found!");
-            return;
+            if (this.shouldAutogen()) {
+                Commandline cl = new Commandline();
+                cl.setWorkingDirectory(getWorkingDirectory());
+                cl.setExecutable(getExecutablePath());
+                cl.createArg().setValue("-g");
+                cl.createArg().setValue(getDoxyfilePath());
+                try {
+                    getLog().info("Generating " + getDoxyfilePath());
+                    CommandLineUtils.executeCommandLine(cl, systemOut, systemErr);
+
+                    // Log debug output
+                    for (String line : stringWriter.toString().split("\n")) {
+                        getLog().debug(line);
+                    }
+                }
+                catch (CommandLineException e) {
+                    getLog().error("CommandLineException: " + e.getMessage());
+                    return;
+                }
+            }
+            else {
+                getLog().error("configuration file " + getDoxyfilePath() + " not found!");
+                return;
+            }
         }
+    }
+
+    /**
+     * @return <code>true</code> if the autogen flag is set
+     */
+    public boolean shouldAutogen() {
+        return autogen;
     }
 
     /**
