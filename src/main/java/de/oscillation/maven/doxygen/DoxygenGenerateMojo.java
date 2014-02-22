@@ -24,11 +24,14 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Goal which runs Doxygen in the project directory.
+ * Execute Doxygen according to the parameters specified in pom.xml.
  */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.PREPARE_PACKAGE)
 public class DoxygenGenerateMojo extends AbstractDoxygenMojo
 {
+    /* (non-Javadoc)
+     * @see org.apache.maven.plugin.AbstractMojo#execute()
+     */
     public void execute() throws MojoExecutionException {
         // Perform checks
         checkExecutable();
