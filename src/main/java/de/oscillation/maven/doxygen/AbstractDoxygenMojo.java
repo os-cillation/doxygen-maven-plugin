@@ -194,6 +194,7 @@ public abstract class AbstractDoxygenMojo extends AbstractMojo
                     }
                 }
             }
+            input.close();
         }
         catch (FileNotFoundException e) {
             getLog().error("Doxyfile does not exist: " + e.getMessage());
